@@ -1,5 +1,5 @@
 // Configuration - Update this with your GitHub username
-const GITHUB_USERNAME = 'jaygit'; // Change this to your GitHub username
+const GITHUB_USERNAME = 'jaygit'; // TODO: Change this to your GitHub username
 
 // Language colors (matching GitHub's language colors)
 const languageColors = {

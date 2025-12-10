@@ -160,7 +160,7 @@ body {
 
 .repo-header {
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     gap: 10px;
     margin-bottom: 15px;
 }
@@ -241,7 +241,7 @@ body {
 }
 
 .topic-tag:hover {
-    background-color: #def;
+    background-color: #ddeeff;
 }
 
 /* Footer */
