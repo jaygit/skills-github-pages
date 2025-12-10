@@ -164,9 +164,9 @@ function displayRepositories(repos) {
     const container = document.getElementById('repositories');
     container.innerHTML = '';
     
-    // Filter to only show public repos and sort by stars/updated
+    // Filter to only show public repos (including forks) and sort by stars/updated
     const filteredRepos = repos
-        .filter(repo => !repo.private) // Only show public repositories
+        .filter(repo => !repo.private) // Only show public repositories (includes forked repos)
         .sort((a, b) => b.stargazers_count - a.stargazers_count);
     
     if (filteredRepos.length === 0) {
