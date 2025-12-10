@@ -1,5 +1,5 @@
 ---
-title: "First Skill"
+title: "First-Skill"
 date: 2025-12-10
 ---
 # My first Github blog
