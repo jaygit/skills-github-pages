@@ -1,63 +1,113 @@
-<header>
+# GitHub Portfolio
 
-<!--
-  <<< Author notes: Course header >>>
-  Include a 1280×640 image, course title in sentence case, and a concise description in emphasis.
-  In your repository settings: enable template repository, add your 1280×640 social image, auto delete head branches.
-  Add your open source license, GitHub uses MIT license.
--->
+_A modern, responsive portfolio site that automatically showcases your public GitHub repositories._
 
-# GitHub Pages
+## 🌟 Features
 
-_Create a site or blog from your GitHub repositories with GitHub Pages._
+- **Automatic Updates**: Fetches and displays your public repositories using the GitHub API
+- **Responsive Design**: Looks great on desktop, tablet, and mobile devices
+- **Modern UI**: Clean, professional interface suitable for LinkedIn and professional profiles
+- **Repository Details**: Shows stars, forks, languages, topics, and descriptions
+- **Easy Customization**: Simple configuration to personalize for your profile
 
-</header>
+## 🚀 Quick Start
 
-<!--
-  <<< Author notes: Course start >>>
-  Include start button, a note about Actions minutes,
-  and tell the learner why they should take the course.
--->
+### 1. Enable GitHub Pages
 
-## Welcome
+1. Go to your repository **Settings**
+2. Navigate to **Pages** in the left sidebar
+3. Under **Source**, select the branch you want to deploy (usually `main` or `copilot/add-ui-for-public-repositories`)
+4. Click **Save**
+5. Your site will be published at `https://<your-username>.github.io/<repository-name>/`
 
-With GitHub Pages, you can host project blogs, documentation, resumes, portfolios, or any other static content you'd like. Your GitHub repository can easily become its own website. In this course, we'll show you how to set up your own site or blog using GitHub Pages.
+### 2. Customize Your Portfolio
 
-- **Who is this for**: Beginners, students, project maintainers, small businesses.
-- **What you'll learn**: How to build a GitHub Pages site.
-- **What you'll build**: We'll build a simple GitHub Pages site with a blog. We'll use [Jekyll](https://jekyllrb.com), a static site generator.
-- **Prerequisites**: If you need to learn about branches, commits, and pull requests, take [Introduction to GitHub](https://github.com/skills/introduction-to-github) first.
-- **How long**: This course takes less than one hour to complete.
+Open `script.js` and update the GitHub username:
 
-In this course, you will:
+```javascript
+const GITHUB_USERNAME = 'jaygit'; // Change this to your GitHub username
+```
 
-1. Enable GitHub Pages
-2. Configure your site
-3. Customize your home page
-4. Create a blog post
-5. Merge your pull request
+That's it! The site will automatically fetch and display your repositories.
 
-### How to start this course
+## 📝 Customization Options
 
-<!-- For start course, run in JavaScript:
-'https://github.com/new?' + new URLSearchParams({
-  template_owner: 'skills',
-  template_name: 'github-pages',
-  owner: '@me',
-  name: 'skills-github-pages',
-  description: 'My clone repository',
-  visibility: 'public',
-}).toString()
--->
+### Change Colors
 
-[![start-course](https://user-images.githubusercontent.com/1221423/235727646-4a590299-ffe5-480d-8cd5-8194ea184546.svg)](https://github.com/new?template_owner=skills&template_name=github-pages&owner=%40me&name=skills-github-pages&description=My+clone+repository&visibility=public)
+Edit `style.css` to customize the color scheme. The main gradient is in the `.hero` section:
 
-1. Right-click **Start course** and open the link in a new tab.
-2. In the new tab, most of the prompts will automatically fill in for you.
-   - For owner, choose your personal account or an organization to host the repository.
-   - We recommend creating a public repository, as private repositories will [use Actions minutes](https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions).
-   - Scroll down and click the **Create repository** button at the bottom of the form.
-3. After your new repository is created, wait about 20 seconds, then refresh the page. Follow the step-by-step instructions in the new repository's README.
+```css
+.hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+```
+
+### Filter Repositories
+
+In `script.js`, modify the `displayRepositories` function to filter repos:
+
+```javascript
+const filteredRepos = repos
+    .filter(repo => !repo.fork) // Hide forked repos
+    .filter(repo => !repo.private) // Hide private repos (already filtered by API)
+    .sort((a, b) => b.stargazers_count - a.stargazers_count);
+```
+
+### Add More Language Colors
+
+Add more programming language colors in `script.js`:
+
+```javascript
+const languageColors = {
+    JavaScript: '#f1e05a',
+    Python: '#3572A5',
+    // Add more languages here
+};
+```
+
+## 🎨 What's Included
+
+- **index.html** - Main HTML structure
+- **style.css** - Responsive CSS styling
+- **script.js** - JavaScript for fetching and displaying repositories
+- **_config.yml** - Jekyll configuration for GitHub Pages
+
+## 🔄 How It Updates
+
+The portfolio automatically fetches fresh data from the GitHub API every time someone visits the page. As you add new repositories, they'll appear automatically - no manual updates needed!
+
+## 📱 Share on LinkedIn
+
+Once your site is live:
+
+1. Visit your GitHub Pages URL
+2. Take a screenshot or use the URL directly
+3. Add it to your LinkedIn profile under "Featured" or "Projects"
+4. Share the link in posts to showcase your work
+
+## 🛠️ Local Development
+
+To test locally:
+
+1. Open `index.html` in a web browser
+2. The site will fetch live data from GitHub's API
+
+Note: For full Jekyll support, you may need to run:
+```bash
+bundle exec jekyll serve
+```
+
+## 📦 Future Enhancements
+
+This is designed as a starter portfolio. Consider adding:
+
+- Custom domain name
+- Blog posts or project write-ups
+- Contact form
+- Analytics tracking
+- Dark mode toggle
+- Search and filter functionality
+- Project categories
 
 <footer>
 
