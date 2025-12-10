@@ -121,8 +121,11 @@ function isTrainingRepo(repo) {
         }
     }
     
-    // Check if it's a forked repo (many training repos are forks)
-    if (repo.fork) return true;
+    // Only consider forks as training repos if they also have low engagement
+    // (no stars and no description suggests it's a practice/tutorial fork)
+    if (repo.fork && repo.stargazers_count === 0 && !repo.description) {
+        return true;
+    }
     
     return false;
 }
@@ -266,7 +269,10 @@ function createRepoCard(repo) {
 
 // Display repositories
 function displayRepositories(repos) {
-    const { training, projects } = categorizeRepositories(repos);
+    // Filter to only show public repos
+    const publicRepos = repos.filter(repo => !repo.private);
+    
+    const { training, projects } = categorizeRepositories(publicRepos);
     
     const trainingContainer = document.getElementById('training-repositories');
     const projectsContainer = document.getElementById('project-repositories');
