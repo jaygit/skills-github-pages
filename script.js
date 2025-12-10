@@ -1,6 +1,57 @@
 // Configuration - Update this with your GitHub username
 const GITHUB_USERNAME = 'jaygit'; // TODO: Change this to your GitHub username
 
+// Theme management
+const THEME_KEY = 'github-portfolio-theme';
+const DEFAULT_THEME = 'day';
+
+// Initialize theme
+function initTheme() {
+    const savedTheme = localStorage.getItem(THEME_KEY) || DEFAULT_THEME;
+    applyTheme(savedTheme);
+    
+    // Set up theme switcher
+    const themeBtn = document.getElementById('theme-btn');
+    const themeMenu = document.getElementById('theme-menu');
+    const themeOptions = document.querySelectorAll('.theme-option');
+    
+    // Toggle menu
+    themeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isVisible = themeMenu.style.display === 'block';
+        themeMenu.style.display = isVisible ? 'none' : 'block';
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', () => {
+        themeMenu.style.display = 'none';
+    });
+    
+    // Handle theme selection
+    themeOptions.forEach(option => {
+        if (option.dataset.theme === savedTheme) {
+            option.classList.add('active');
+        }
+        
+        option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const theme = option.dataset.theme;
+            applyTheme(theme);
+            localStorage.setItem(THEME_KEY, theme);
+            
+            // Update active state
+            themeOptions.forEach(opt => opt.classList.remove('active'));
+            option.classList.add('active');
+            
+            themeMenu.style.display = 'none';
+        });
+    });
+}
+
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+}
+
 // Language colors (matching GitHub's language colors)
 const languageColors = {
     JavaScript: '#f1e05a',
@@ -21,6 +72,63 @@ const languageColors = {
     Shell: '#89e051',
     // Add more as needed
 };
+
+// Categorize repositories
+function categorizeRepositories(repos) {
+    const training = [];
+    const projects = [];
+    
+    repos.forEach(repo => {
+        // Determine if it's a training repo based on name patterns and topics
+        const isTraining = isTrainingRepo(repo);
+        
+        if (isTraining) {
+            training.push(repo);
+        } else {
+            projects.push(repo);
+        }
+    });
+    
+    return { training, projects };
+}
+
+function isTrainingRepo(repo) {
+    const name = repo.name.toLowerCase();
+    const description = (repo.description || '').toLowerCase();
+    const topics = repo.topics || [];
+    
+    // Check for common training/tutorial/learning patterns
+    const trainingKeywords = [
+        'tutorial', 'course', 'learning', 'practice', 'exercise',
+        'training', 'workshop', 'lesson', 'bootcamp', 'skill',
+        'learn', 'study', 'example', 'sample', 'demo'
+    ];
+    
+    // Check name
+    for (const keyword of trainingKeywords) {
+        if (name.includes(keyword)) return true;
+    }
+    
+    // Check description
+    for (const keyword of trainingKeywords) {
+        if (description.includes(keyword)) return true;
+    }
+    
+    // Check topics
+    for (const topic of topics) {
+        for (const keyword of trainingKeywords) {
+            if (topic.toLowerCase().includes(keyword)) return true;
+        }
+    }
+    
+    // Only consider forks as training repos if they also have low engagement
+    // (no stars and no description suggests it's a practice/tutorial fork)
+    if (repo.fork && repo.stargazers_count === 0 && !repo.description) {
+        return true;
+    }
+    
+    return false;
+}
 
 // Fetch user profile and repositories
 async function fetchGitHubData() {
@@ -161,29 +269,55 @@ function createRepoCard(repo) {
 
 // Display repositories
 function displayRepositories(repos) {
-    const container = document.getElementById('repositories');
-    container.innerHTML = '';
+    // Filter to only show public repos
+    const publicRepos = repos.filter(repo => !repo.private);
     
-    // Filter to only show public repos (including forks) and sort by stars/updated
-    const filteredRepos = repos
-        .filter(repo => !repo.private) // Only show public repositories (includes forked repos)
-        .sort((a, b) => b.stargazers_count - a.stargazers_count);
+    const { training, projects } = categorizeRepositories(publicRepos);
     
-    if (filteredRepos.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #666;">No public repositories found.</p>';
-        return;
+    const trainingContainer = document.getElementById('training-repositories');
+    const projectsContainer = document.getElementById('project-repositories');
+    const trainingSection = document.getElementById('training-section');
+    const projectsSection = document.getElementById('projects-section');
+    
+    trainingContainer.innerHTML = '';
+    projectsContainer.innerHTML = '';
+    
+    // Sort by stars
+    const sortedTraining = training.sort((a, b) => b.stargazers_count - a.stargazers_count);
+    const sortedProjects = projects.sort((a, b) => b.stargazers_count - a.stargazers_count);
+    
+    // Display training repos
+    if (sortedTraining.length > 0) {
+        sortedTraining.forEach(repo => {
+            const card = createRepoCard(repo);
+            trainingContainer.appendChild(card);
+        });
+        trainingSection.style.display = 'block';
     }
     
-    filteredRepos.forEach(repo => {
-        const card = createRepoCard(repo);
-        container.appendChild(card);
-    });
+    // Display project repos
+    if (sortedProjects.length > 0) {
+        sortedProjects.forEach(repo => {
+            const card = createRepoCard(repo);
+            projectsContainer.appendChild(card);
+        });
+        projectsSection.style.display = 'block';
+    }
+    
+    // Show message if no repos at all
+    if (sortedTraining.length === 0 && sortedProjects.length === 0) {
+        projectsContainer.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No public repositories found.</p>';
+        projectsSection.style.display = 'block';
+    }
 }
 
 // Initialize the page
 async function init() {
     const loadingElement = document.getElementById('loading');
     const errorElement = document.getElementById('error');
+    
+    // Initialize theme first
+    initTheme();
     
     try {
         // Set current year in footer
