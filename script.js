@@ -164,9 +164,9 @@ function displayRepositories(repos) {
     const container = document.getElementById('repositories');
     container.innerHTML = '';
     
-    // Filter out forks if desired, and sort by stars/updated
+    // Filter to only show public repos and sort by stars/updated
     const filteredRepos = repos
-        .filter(repo => !repo.fork) // Remove this line if you want to show forks
+        .filter(repo => !repo.private) // Only show public repositories
         .sort((a, b) => b.stargazers_count - a.stargazers_count);
     
     if (filteredRepos.length === 0) {
@@ -186,6 +186,9 @@ async function init() {
     const errorElement = document.getElementById('error');
     
     try {
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+        
         const { user, repos } = await fetchGitHubData();
         
         displayUserProfile(user);
@@ -198,9 +201,6 @@ async function init() {
         errorElement.style.display = 'block';
     }
 }
-
-// Set current year in footer
-document.getElementById('year').textContent = new Date().getFullYear();
 
 // Load data when page loads
 document.addEventListener('DOMContentLoaded', init);
