@@ -152,6 +152,8 @@ body {
 .theme-option.active {
     background-color: var(--bg-primary);
     font-weight: 600;
+    border-left: 3px solid var(--link-color);
+    padding-left: 13px;
 }
 
 .profile {
