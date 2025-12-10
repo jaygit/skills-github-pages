@@ -9,6 +9,18 @@
 </head>
 <body>
     <header class="hero">
+        <div class="theme-switcher">
+            <button id="theme-btn" class="theme-button" aria-label="Change theme">
+                <svg class="theme-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18Z"/>
+                </svg>
+            </button>
+            <div id="theme-menu" class="theme-menu" style="display: none;">
+                <button class="theme-option" data-theme="day">☀️ Day</button>
+                <button class="theme-option" data-theme="night">🌙 Night</button>
+                <button class="theme-option" data-theme="solarized">🎨 Solarized</button>
+            </div>
+        </div>
         <div class="container">
             <div class="profile">
                 <img id="avatar" class="avatar" src="" alt="Profile Avatar">
@@ -27,20 +39,25 @@
     </header>
 
     <main class="container">
-        <section class="projects-section">
-            <h2>My Projects</h2>
-            <p class="section-description">Explore my public repositories</p>
-            
-            <div id="loading" class="loading">
-                <div class="spinner"></div>
-                <p>Loading repositories...</p>
-            </div>
-            
-            <div id="error" class="error-message" style="display: none;">
-                <p>Unable to load repositories. Please check your internet connection or try again later.</p>
-            </div>
-            
-            <div id="repositories" class="repositories-grid"></div>
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading repositories...</p>
+        </div>
+        
+        <div id="error" class="error-message" style="display: none;">
+            <p>Unable to load repositories. Please check your internet connection or try again later.</p>
+        </div>
+        
+        <section id="training-section" class="projects-section" style="display: none;">
+            <h2>Training Repositories</h2>
+            <p class="section-description">Learning and skill-building projects</p>
+            <div id="training-repositories" class="repositories-grid"></div>
+        </section>
+        
+        <section id="projects-section" class="projects-section" style="display: none;">
+            <h2>Project Repositories</h2>
+            <p class="section-description">Personal projects and contributions</p>
+            <div id="project-repositories" class="repositories-grid"></div>
         </section>
     </main>
 
