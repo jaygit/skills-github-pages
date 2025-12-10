@@ -1,4 +1,4 @@
 ---
-title: Welcome to my blog
+My Skills Blog: Welcome to my skills blog
 ---
 
