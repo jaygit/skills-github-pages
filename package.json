@@ -1,0 +1,12 @@
+{
+  "name": "github-portfolio",
+  "version": "1.0.0",
+  "description": "GitHub Pages Portfolio with YAML configuration",
+  "scripts": {
+    "update-config": "node update-config.js"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {}
+}
