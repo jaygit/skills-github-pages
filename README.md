@@ -1,57 +1,116 @@
-<header>
+# GitHub Portfolio
 
-<!--
-  <<< Author notes: Course header >>>
-  Include a 1280×640 image, course title in sentence case, and a concise description in emphasis.
-  In your repository settings: enable template repository, add your 1280×640 social image, auto delete head branches.
-  Add your open source license, GitHub uses MIT license.
--->
+_A dynamic portfolio site showcasing your GitHub projects with automatic updates and customizable classifications._
 
-# GitHub Pages
+## Overview
 
-_Create a site or blog from your GitHub repositories with GitHub Pages._
+This is a GitHub Pages portfolio that automatically displays your public repositories organized into two categories:
+- **Training Repositories**: Tutorials, courses, and learning projects
+- **Project Repositories**: Personal projects and contributions
 
-</header>
+## Features
 
-<!--
-  <<< Author notes: Finish >>>
-  Review what we learned, ask for feedback, provide next steps.
--->
+- 🎨 **Three Theme Options**: Day, Night, and Solarized themes with persistent selection
+- 🦁 **Animal Icons**: Each project gets a unique animal emoji (inspired by O'Reilly book covers)
+- 📝 **YAML Configuration**: Manual control over project classifications via `projects-config.yaml`
+- 🔄 **Automatic Updates**: Run `npm run update-config` to fetch latest repositories from GitHub
+- 📱 **Responsive Design**: Works seamlessly on desktop and mobile devices
+- ⚡ **Fast Loading**: YAML-based configuration loads instantly without API rate limits
 
-## Finish
+## Getting Started
 
-_Congratulations friend, you've completed this course!_
+### Prerequisites
 
-<img src=https://octodex.github.com/images/constructocat2.jpg alt=celebrate width=300 align=right>
+- Node.js and npm installed
+- A GitHub account
+- GitHub Pages enabled for your repository
 
-Your blog is now live and has been deployed!
+### Setup
 
-Here's a recap of all the tasks you've accomplished in your repository:
+1. **Update Configuration**
 
-- You enabled GitHub Pages.
-- You selected a theme using the config file.
-- You learned about proper directory format and file naming conventions in Jekyll.
-- You created your first blog post with Jekyll!
+   Edit `script.js` and change the GitHub username:
+   ```javascript
+   const GITHUB_USERNAME = 'jaygit'; // Change to your username
+   ```
 
-### What's next?
+2. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-- Keep working on your GitHub Pages site... we love seeing what you come up with!
-- We'd love to hear what you thought of this course [in our discussion board](https://github.com/orgs/skills/discussions/categories/github-pages).
-- [Take another GitHub Skills course](https://github.com/skills).
-- [Read the GitHub Getting Started docs](https://docs.github.com/en/get-started).
-- To find projects to contribute to, check out [GitHub Explore](https://github.com/explore).
+3. **Generate Project Configuration**
+   ```bash
+   npm run update-config
+   ```
 
-<footer>
+4. **Customize Classifications**
 
-<!--
-  <<< Author notes: Footer >>>
-  Add a link to get support, GitHub status page, code of conduct, license link.
--->
+   Open `projects-config.yaml` and update the `classification` field for each project:
+   - `training` - For tutorials, courses, learning exercises
+   - `project` - For personal projects and contributions
 
----
+5. **Deploy to GitHub Pages**
 
-Get help: [Post in our discussion board](https://github.com/orgs/skills/discussions/categories/github-pages) &bull; [Review the GitHub status page](https://www.githubstatus.com/)
+   Commit and push your changes. The site will be available at:
+   ```
+   https://[username].github.io/[repository-name]
+   ```
 
-&copy; 2023 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
+## Usage
 
-</footer>
+### Updating Project List
+
+When you create new repositories, update the configuration:
+
+```bash
+npm run update-config
+```
+
+This preserves your manual classifications and adds new repositories.
+
+### Manual Classification
+
+Edit `projects-config.yaml` to change how projects are categorized:
+
+```yaml
+projects:
+  - name: my-project
+    description: Project description
+    classification: project  # or 'training'
+    # ... other fields
+```
+
+### Theme Selection
+
+Click the theme button in the top-right corner to switch between Day, Night, and Solarized themes. Your selection is saved automatically.
+
+## Project Structure
+
+- `index.html` - Main portfolio page
+- `style.css` - Styles and theme definitions
+- `script.js` - Portfolio logic and GitHub API integration
+- `projects-config.yaml` - Repository configuration with classifications
+- `update-config.js` - Script to fetch and update repository data
+- `yaml-parser.js` - YAML parsing for configuration
+
+## Customization
+
+- Modify `style.css` to change colors, fonts, and layout
+- Update `index.html` to adjust page structure
+- Add new themes in `style.css` and `script.js`
+- Extend `projects-config.yaml` with custom fields
+
+## Learn More
+
+For detailed information about the YAML configuration system, see [PROJECTS-CONFIG.md](PROJECTS-CONFIG.md).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Inspired by O'Reilly book cover designs for the animal icons
+- Built with vanilla JavaScript and GitHub Pages
+- Uses [js-yaml](https://github.com/nodeca/js-yaml) for YAML parsing
