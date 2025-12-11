@@ -6,7 +6,7 @@
     "update-config": "node update-config.js"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0"
+    "js-yaml": "4.1.0"
   },
   "devDependencies": {}
 }

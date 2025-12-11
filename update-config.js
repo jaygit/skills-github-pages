@@ -3,8 +3,8 @@
 const fs = require('fs');
 const yaml = require('js-yaml');
 
-// Configuration - read from script.js
-const GITHUB_USERNAME = 'jaygit';
+// Configuration - can be overridden with environment variable
+const GITHUB_USERNAME = process.env.GITHUB_USERNAME || 'jaygit';
 const CONFIG_FILE = './projects-config.yaml';
 
 // Animal emojis for project icons (O'Reilly style)
@@ -71,7 +71,33 @@ function getAutoClassification(repo) {
 
 async function fetchGitHubRepos() {
     try {
-        const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
+        // Use native fetch (Node.js 18+) or fallback to https module
+        let fetchFn = global.fetch;
+        if (!fetchFn) {
+            // For Node.js < 18, provide a polyfill using https
+            const https = require('https');
+            fetchFn = (url) => {
+                return new Promise((resolve, reject) => {
+                    https.get(url, { headers: { 'User-Agent': 'Node.js' } }, (res) => {
+                        let data = '';
+                        res.on('data', chunk => data += chunk);
+                        res.on('end', () => {
+                            if (res.statusCode >= 200 && res.statusCode < 300) {
+                                resolve({
+                                    ok: true,
+                                    statusText: res.statusMessage,
+                                    json: () => Promise.resolve(JSON.parse(data))
+                                });
+                            } else {
+                                reject(new Error(`HTTP ${res.statusCode}: ${res.statusMessage}`));
+                            }
+                        });
+                    }).on('error', reject);
+                });
+            };
+        }
+        
+        const response = await fetchFn(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
         if (!response.ok) {
             throw new Error(`Failed to fetch repositories: ${response.statusText}`);
         }

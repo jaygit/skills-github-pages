@@ -13,6 +13,20 @@ This portfolio now supports a YAML-based configuration system for managing proje
 
 ## Getting Started
 
+### Configuration
+
+Before using the system, update the GitHub username in `script.js`:
+
+```javascript
+const GITHUB_USERNAME = 'jaygit'; // Change this to your GitHub username
+```
+
+Optionally, you can set the `GITHUB_USERNAME` environment variable when running the update script:
+
+```bash
+GITHUB_USERNAME=your-username npm run update-config
+```
+
 ### Installation
 
 ```bash

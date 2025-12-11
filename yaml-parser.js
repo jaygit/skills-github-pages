@@ -30,10 +30,35 @@ function parseProjectsYAML(yamlText) {
         }
         // Check for other fields
         else if (currentProject) {
+            // Check if we're starting the topics list
+            if (line.match(/^\s+topics:\s*$/)) {
+                inTopics = true;
+                continue;
+            }
+            
+            // If we're in topics section, parse topic items
+            if (inTopics) {
+                if (line.trim().startsWith('- ')) {
+                    const topic = line.trim().substring(2).trim();
+                    currentProject.topics.push(topic);
+                    continue;
+                } else if (line.match(/^\s+\w+:/)) {
+                    // We've encountered a new field, exit topics mode
+                    inTopics = false;
+                }
+            }
+            
+            // Parse regular fields
             if (line.includes('description:')) {
                 const match = line.match(/description:\s*['"]?(.*)['"]?$/);
                 if (match) {
-                    currentProject.description = match[1].replace(/^['"]|['"]$/g, '').trim();
+                    // Remove quotes if present
+                    let desc = match[1].trim();
+                    if ((desc.startsWith('"') && desc.endsWith('"')) || 
+                        (desc.startsWith("'") && desc.endsWith("'"))) {
+                        desc = desc.slice(1, -1);
+                    }
+                    currentProject.description = desc;
                 }
             }
             else if (line.includes('url:')) {
@@ -72,19 +97,11 @@ function parseProjectsYAML(yamlText) {
                     currentProject.forks = parseInt(match[1]);
                 }
             }
-            else if (line.includes('topics:')) {
-                inTopics = true;
-            }
-            else if (inTopics && line.trim().startsWith('- ')) {
-                const topic = line.trim().substring(2).trim();
-                currentProject.topics.push(topic);
-            }
             else if (line.includes('updated_at:')) {
                 const match = line.match(/updated_at:\s*(.+)/);
                 if (match) {
                     currentProject.updated_at = match[1].trim();
                 }
-                inTopics = false;
             }
         }
     }
