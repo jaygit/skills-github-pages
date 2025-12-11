@@ -22,3 +22,90 @@ projects:
       - tutorial
       - learning
     updated_at: 2025-12-11T05:40:19.718Z
+  - name: portfolio-website
+    description: Personal portfolio website showcasing projects and skills
+    url: https://github.com/jaygit/portfolio-website
+    classification: project
+    image: 🦊
+    language: JavaScript
+    stars: 15
+    forks: 3
+    topics:
+      - portfolio
+      - web-development
+      - javascript
+      - responsive-design
+    updated_at: 2025-12-10T14:22:00.000Z
+  - name: react-todo-app
+    description: A modern todo application built with React and TypeScript
+    url: https://github.com/jaygit/react-todo-app
+    classification: project
+    image: 🐻
+    language: TypeScript
+    stars: 8
+    forks: 2
+    topics:
+      - react
+      - typescript
+      - todo-app
+      - frontend
+    updated_at: 2025-12-09T10:15:30.000Z
+  - name: python-data-analysis
+    description: Data analysis and visualization projects using Python
+    url: https://github.com/jaygit/python-data-analysis
+    classification: project
+    image: 🐍
+    language: Python
+    stars: 12
+    forks: 4
+    topics:
+      - python
+      - data-analysis
+      - pandas
+      - matplotlib
+      - jupyter
+    updated_at: 2025-12-08T16:45:00.000Z
+  - name: javascript-algorithms
+    description: Learning data structures and algorithms with JavaScript
+    url: https://github.com/jaygit/javascript-algorithms
+    classification: training
+    image: 🦉
+    language: JavaScript
+    stars: 5
+    forks: 1
+    topics:
+      - algorithms
+      - data-structures
+      - javascript
+      - learning
+      - coding-practice
+    updated_at: 2025-12-07T09:30:00.000Z
+  - name: docker-compose-examples
+    description: Collection of Docker Compose configurations for various services
+    url: https://github.com/jaygit/docker-compose-examples
+    classification: project
+    image: 🐳
+    language: Shell
+    stars: 20
+    forks: 7
+    topics:
+      - docker
+      - docker-compose
+      - devops
+      - containers
+    updated_at: 2025-12-06T13:20:00.000Z
+  - name: web-accessibility-workshop
+    description: Workshop materials for learning web accessibility best practices
+    url: https://github.com/jaygit/web-accessibility-workshop
+    classification: training
+    image: 🦅
+    language: HTML
+    stars: 3
+    forks: 1
+    topics:
+      - accessibility
+      - a11y
+      - workshop
+      - web-development
+      - wcag
+    updated_at: 2025-12-05T11:10:00.000Z
