@@ -300,6 +300,16 @@ body {
     flex-shrink: 0;
 }
 
+.repo-image {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    text-align: center;
+}
+
 .repo-name {
     font-size: 1.2rem;
     font-weight: 600;

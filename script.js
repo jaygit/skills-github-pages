@@ -79,8 +79,13 @@ function categorizeRepositories(repos) {
     const projects = [];
     
     repos.forEach(repo => {
-        // Determine if it's a training repo based on name patterns and topics
-        const isTraining = isTrainingRepo(repo);
+        // Use YAML classification if available, otherwise use auto-detection
+        let isTraining;
+        if (repo._classification) {
+            isTraining = repo._classification === 'training';
+        } else {
+            isTraining = isTrainingRepo(repo);
+        }
         
         if (isTraining) {
             training.push(repo);
@@ -133,19 +138,64 @@ function isTrainingRepo(repo) {
 // Fetch user profile and repositories
 async function fetchGitHubData() {
     try {
-        // Fetch user profile
-        const userResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
-        if (!userResponse.ok) {
-            throw new Error('Failed to fetch user data');
-        }
-        const userData = await userResponse.json();
+        // Try to load from YAML config first
+        let reposData;
+        let useYAMLConfig = false;
         
-        // Fetch repositories
-        const reposResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
-        if (!reposResponse.ok) {
-            throw new Error('Failed to fetch repositories');
+        try {
+            const projectsConfig = await loadProjectsConfig();
+            if (projectsConfig && projectsConfig.length > 0) {
+                console.log('Loaded repositories from YAML config');
+                // Convert config format to match GitHub API format
+                reposData = projectsConfig.map(project => ({
+                    name: project.name,
+                    description: project.description,
+                    html_url: project.url,
+                    language: project.language,
+                    stargazers_count: project.stars || 0,
+                    forks_count: project.forks || 0,
+                    topics: project.topics || [],
+                    updated_at: project.updated_at,
+                    private: false,
+                    fork: false,
+                    // Add custom fields for our use
+                    _classification: project.classification,
+                    _image: project.image
+                }));
+                useYAMLConfig = true;
+            }
+        } catch (configError) {
+            console.log('YAML config not available, will use GitHub API:', configError.message);
         }
-        const reposData = await reposResponse.json();
+        
+        // Fetch user profile (always needed)
+        let userData;
+        try {
+            const userResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
+            if (!userResponse.ok) {
+                throw new Error('Failed to fetch user data');
+            }
+            userData = await userResponse.json();
+        } catch (userError) {
+            console.log('Could not fetch user profile from API, using defaults');
+            // Use default user data when API is unavailable
+            userData = {
+                avatar_url: 'https://github.com/identicons/jaygit.png',
+                name: GITHUB_USERNAME,
+                login: GITHUB_USERNAME,
+                bio: '',
+                html_url: `https://github.com/${GITHUB_USERNAME}`
+            };
+        }
+        
+        // If we didn't load from YAML, fetch from API
+        if (!useYAMLConfig) {
+            const reposResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
+            if (!reposResponse.ok) {
+                throw new Error('Failed to fetch repositories');
+            }
+            reposData = await reposResponse.json();
+        }
         
         return { user: userData, repos: reposData };
     } catch (error) {
@@ -178,11 +228,21 @@ function createRepoCard(repo) {
     const header = document.createElement('div');
     header.className = 'repo-header';
     
-    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    icon.setAttribute('class', 'repo-icon');
-    icon.setAttribute('viewBox', '0 0 16 16');
-    icon.setAttribute('fill', 'currentColor');
-    icon.innerHTML = '<path d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"/>';
+    // Use custom image if available (animal emoji), otherwise use default icon
+    if (repo._image) {
+        const imageSpan = document.createElement('span');
+        imageSpan.className = 'repo-image';
+        imageSpan.textContent = repo._image;
+        imageSpan.title = `${repo.name} icon`;
+        header.appendChild(imageSpan);
+    } else {
+        const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        icon.setAttribute('class', 'repo-icon');
+        icon.setAttribute('viewBox', '0 0 16 16');
+        icon.setAttribute('fill', 'currentColor');
+        icon.innerHTML = '<path d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"/>';
+        header.appendChild(icon);
+    }
     
     const repoLink = document.createElement('a');
     repoLink.href = repo.html_url;
@@ -191,7 +251,6 @@ function createRepoCard(repo) {
     repoLink.target = '_blank';
     repoLink.rel = 'noopener noreferrer';
     
-    header.appendChild(icon);
     header.appendChild(repoLink);
     card.appendChild(header);
     

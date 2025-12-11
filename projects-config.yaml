@@ -1,0 +1,24 @@
+# Projects Configuration
+# This file is dynamically updated with all public repositories from GitHub
+# You can manually edit the 'classification' field for each project
+# Classification options: training, project
+# The 'image' field is automatically generated based on the project name (animal emoji)
+# 
+# To update this file, run: npm run update-config
+#
+# Last updated: 2025-12-11T05:40:19.718Z
+
+projects:
+  - name: skills-github-pages
+    description: Create a site or blog from your GitHub repositories with GitHub Pages
+    url: https://github.com/jaygit/skills-github-pages
+    classification: training
+    image: 🦁
+    language: HTML
+    stars: 0
+    forks: 0
+    topics:
+      - github-pages
+      - tutorial
+      - learning
+    updated_at: 2025-12-11T05:40:19.718Z
